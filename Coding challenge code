@@ -1,0 +1,76 @@
+import networkx as nx
+import statistics as st
+import numpy as np
+import matplotlib.pyplot as plt
+
+#opening and parsing the data into lists for each column
+
+with open('data.Montoya.txt') as f_in:
+    file_contents = f_in.read()
+    
+lines = file_contents.split('\n')
+data = []
+
+
+for line in lines:
+    if len(line) > 0:
+        row = tuple(line.split('\t'))
+        data.append(row)
+raw_data = data[1:]
+
+Type = []
+for row in raw_data:
+    Type.append(row[0])
+
+Time = []
+for row in raw_data:
+    Time.append(int(row[1]))
+    
+Value = []
+for row in raw_data:
+    Value.append(float(row[2]))
+
+Data_center = []
+for row in raw_data:
+    Data_center.append(row[3])
+   
+#Values according to their Data center
+
+
+dc = dict(zip(Value, Data_center))
+
+dci = []
+for i in dc.items():
+    if i[1] == 'dc=I':
+        dci.append(i[0])
+    
+dcs = []
+for i in dc.items():
+    if i[1] == 'dc=S':
+        dcs.append(i[0])
+
+dca = []
+for i in dc.items():
+    if i[1] == 'dc=A':
+        dca.append(i[0])
+
+print('dc=I mean value:', st.mean(dci))
+print('dc=S mean value:',st.mean(dcs))
+print('dc=A mean value:',st.mean(dca))
+print('\n')
+print('dc=I standard deviation:', st.stdev(dci))
+print('dc=S standard deviation:', st.stdev(dcs))
+print('dc=A standard deviation:', st.stdev(dca))
+
+#A dictionary of Values according to Time
+
+time_value = dict(zip(Time, Value))
+print(time_value)
+
+
+#line graph showing the Value in relation to Time for first 
+plt.figure(1)
+plt.plot(Time[0:25],Value[0:25])
+plt.xlabel('time')
+plt.ylabel('value')
+plt.show()
